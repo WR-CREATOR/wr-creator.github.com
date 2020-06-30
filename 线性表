@@ -1,0 +1,93 @@
+#include <stdio.h>
+#include <stdlib.h>
+//#define MaxSize 20
+#define InitSize 10
+
+typedef struct {
+	//int data[MaxSize];
+	int *data;
+	int MaxSize;
+	int length;
+}SqList;
+
+/*void InitList(SqList &L){
+	for (int i = 0; i < MaxSize; ++i) {
+		L.data[i] = 0;
+		L.length =0;
+	}
+}*/
+
+void InitList(SqList &L) {
+	L.data = (int *)malloc(InitSize * sizeof(int));
+	for (int i = 0; i < InitSize; ++i) {
+		L.data[i] = i;
+	}
+	L.length = InitSize;
+	L.MaxSize = InitSize;
+}
+
+void IncreaseSize(SqList &L,int len) {
+	int *p=L.data;
+	L.data = (int *)malloc((InitSize + len) * sizeof(int));
+	for (int i = 0; i < L.length; ++i) {
+		L.data[i] = p[i];
+	}
+	L.MaxSize = InitSize + len;
+	free(p);
+}
+
+bool ListInsert(SqList &L,int i,int e) {//在位序i处插入e
+	if (i<1||i > L.length+1) return false;
+	for (int j = L.length; j >i-1; --j) {
+		L.data[j ] = L.data[j-1];
+	}
+	L.data[i-1] = e;
+	++L.length;
+	return true;
+}
+
+bool ListDelete(SqList &L, int i,int &e) {//删除位序i并带回值e
+	if (i<1 || i>L.length) {
+		return false;
+	}
+	e = L.data[i - 1];
+	for (int j = i; j < L.length; ++j) {
+		L.data[j - 1] = L.data[j];
+	}
+	--L.length;
+	return true;
+}
+
+void Print(SqList L)
+{
+	for (int i = 0; i < L.length; ++i) {
+		printf("%d ", L.data[i]);
+	}
+	printf("length=%d\n", L.length);
+}
+
+int main() {
+	SqList L;
+	InitList(L);
+	int e = -1;
+	printf("%d\n", L.MaxSize);
+	IncreaseSize(L, 10);
+	printf("%d\n", L.MaxSize);
+	Print(L);
+	if (ListInsert(L, 11, 98)) {
+		printf("insert success\n");
+	}
+	else {
+		printf("insert fail\n");
+	}
+	Print(L);
+	if (ListDelete(L, 5, e)) {
+		printf("delete success e=%d\n", e);
+	}
+	else {
+		printf("delete fail\n");
+	}
+	Print(L);
+	system("pause");
+	return 0;
+}
