@@ -1,0 +1,44 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct node {
+	int data;
+	struct node *lchild;
+	struct node *rchild;
+}bitree;
+
+//插入结点
+void bst(bitree *&t, int k) {
+	if (t == 0) {
+		t = (bitree*)malloc(sizeof(bitree));
+		t->data = k;
+		t->lchild = t->rchild = NULL;
+	}
+	else if (t->data > k) {
+		bst(t->lchild, k);
+	}
+	else {
+		bst(t->rchild, k);
+	}
+}
+
+void midorder(bitree *&t) {
+	if (t != 0) {//NULL为0
+		midorder(t->lchild);
+		printf("%d ", t->data);
+		midorder(t->rchild);
+	}
+}
+
+int main() {
+	bitree *s=NULL;
+	int a;
+	for (int i = 0; i < 5; i++) {
+		scanf("%d", &a);
+		bst(s, a);
+	}
+	midorder(s);
+	getchar();
+	getchar();
+	return 0;
+}
